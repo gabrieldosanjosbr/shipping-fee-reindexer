@@ -1,0 +1,16 @@
+shipping_fee_mass_update_index:
+    path: /
+    controller: App\Controller\ShippingFeeMassUpdateController::index
+
+shipping_fee_mass_upload_file:
+    path: /shipping/fee/upload-file
+    controller: App\Controller\ShippingFeeMassUpdateController::uploadFile
+    methods: POST
+
+_wdt:
+    resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
+    prefix: /_wdt
+
+_profiler:
+    resource: "@WebProfilerBundle/Resources/config/routing/profiler.xml"
+    prefix: /_profiler

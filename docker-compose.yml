@@ -1,0 +1,63 @@
+version: "3.4"
+
+services:
+  nginx:
+    image: nginx:1.12.1
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ./public:/uello/public
+      - ./docker/nginx/www.conf:/etc/nginx/conf.d/www.conf
+    networks:
+      - default
+
+  php:
+    build:
+      context: .
+      network: host
+    restart: unless-stopped
+    volumes:
+      - php_socket:/var/run/php
+      - ./:/uello
+      - ./docker/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/uello.conf
+      - ./docker/php/conf.d/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+      - ./docker/php/conf.d/symfony.dev.ini:/usr/local/etc/php/conf.d/symfony.ini
+#      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - default
+
+  postgresql:
+    image: postgres:${POSTGRES_VERSION:-13}-alpine
+    environment:
+      POSTGRES_DB: uello
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: 72mDoRyV3d1K
+      POSTGRES_USER: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data:rw
+    networks:
+      - default
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - default
+
+volumes:
+  php_socket:
+
+networks:
+  default:
+    driver: bridge
