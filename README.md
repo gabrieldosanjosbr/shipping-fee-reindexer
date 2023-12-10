@@ -1,7 +1,7 @@
 # Uello Project (Technical Test)
-## _Shipping Fee Mass Readjustment_
+## _Shipping Fee Reindexer_
 
-Mass update shipping fee
+Users can submit files with range of postalcodes, weight and fee and it will reindex in the database
 
 ## Features
 
